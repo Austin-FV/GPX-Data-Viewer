@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>GPS Data Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="DESC">
+    <meta name="keywords" content="KEY">
+    <meta name="author" content="Austin Varghese">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+
+<body>
+    <hr>
+    <div class="row">
+        <h1 class="col">GPS Data Viewer</h1>
+        <!-- <div class="dropdown col-auto">
+            <button type="button" id="loginID" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+                Log In
+            </button>
+        </div> -->
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalLabel">Log In</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+                <form ref='loginUser' id='loginUser'>
+                    <div class="form-group">
+                        <label for="loginUser" id="loginUser">Username</label>
+                        <input type="text" class="form-control" id="loginUserInput" placeholder="Enter Username">
+    
+                    </div>
+                </form>
+                <form ref='loginPass' id='loginPass'>
+                    <div class="form-group">
+                        <label for="loginPass" id="loginPass">Password</label>
+                        <input type="password" class="form-control" id="loginPassInput" placeholder="Enter Password">
+    
+                    </div>
+                </form>
+                <form ref='databaseForm' id='databaseForm'>
+                    <div class="form-group">
+                        <label for="databaseForm" id="databaseForm">Database Name</label>
+                        <input type="text" class="form-control" id="databaseInput" placeholder="Enter Name of Database">
+    
+                    </div>
+                </form>
+                <!-- <div class="form-group">
+                    <input type="submit" class="btn btn-primary"> 
+                </div> -->
+                <!-- <hr> -->
+                <!-- <button type="submit" id="createGPXButton" onclick="createGPXbutton()" class="btn btn-primary">
+                    Log In
+                </button>  -->
+
+
+                <!-- <form>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Username</label>
+                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Password</label>
+                      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form> -->
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="loginButtonID" onclick="loginButton()">Log In</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <hr>
+    <!-- <h3>Download test</h3>
+    If the A3 stub is running and simple.gpx exists in the uploads/ directory on the server, then clicking on the link below will download it from the server.<br>
+    <a href="testCard.vcf" download ">simple.gpx</a>
+    <p></p> -->
+
+    <!-- <hr>
+    <div id="blah">I am blah</div>
+    <hr>
+    <form ref='someform'
+          id='someform'>
+          <div class="form-group">
+                <label for="entryBox">Last Name</label>
+                <input type="text" class="form-control" id="entryBox" value="Value" placeholder="Placeholder">
+          </div>
+        <div class="form-group">
+            <input type='submit' class="btn btn-secondary">
+        </div>
+    </form> -->
+
+    <h3>File Log</h3>
+
+    <div class="scroll-y scrollbar-y table-responsive" id="fileLogSec">
+        <table id="fileLogTable" class="table table-bordered table-hover table-curved">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">File Name</th>
+                    <th scope="col">Version</th>
+                    <th scope="col">Creator</th>
+                    <th scope="col">Number of Waypoints</th>
+                    <th scope="col">Number of Routes</th>
+                    <th scope="col">Number of Tracks</th>
+                </tr>
+            </thead>
+            <!-- <tbody id="fileLog">
+                <tr>
+                    <th scope="col">
+                        <a href="../uploads/simple.gpx" download ">simple.gpx</a>
+                    </th>
+                    <th scope="col">1.1</th>
+                    <th scope="col">dennis</th>
+                    <th scope="col">3</th>
+                    <th scope="col">3</th>
+                    <th scope="col">3</th>
+                </tr>
+            </tbody> -->
+        </table>
+        <!-- <h4>Upload a File</h4> -->
+    </div>
+    <div id = "emptyFile">
+        <h4>No Files Uploaded</h4>
+        <hr>
+    </div>
+
+    <form ref='uploadForm' id='uploadForm' action='/upload' method='post' encType="multipart/form-data">
+        <div class="form-group">
+            <input type="file" name="uploadFile" class="btn btn-secondary">
+            <input type='submit' value='Upload' class="btn btn-secondary">
+        </div>
+    </form>
+
+    <hr>
+
+    <div class="row">
+        <h3 class="col">GPX View Panel</h3>
+        <div class="col-auto mr-auto" id="compStatus"></div>
+        <div class="dropdown col-auto">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Select File
+            </button>
+            <div id="dropdownlist" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <!-- <button class="dropdown-item" type="button">simple.gpx</button> -->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ml-auto" id="fileSelect">
+        <!-- <select class="form-control form-control-md" id="fileSelectMenu">
+            <option>Select File</option>
+            <option value="simple.gpx">simple.gpx</option>
+        </select> -->
+    </div>
+
+    <hr>
+
+    <div class="scroll-y scrollbar-y table-responsive" id="gpxViewPanel">
+        <table id="compTable" class="table table-bordered table-hover table-curved">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Component</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Number of Points</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Loop</th>
+                </tr>
+            </thead>
+
+            <!-- <tbody id="gpxViewData">
+                <tr>
+                    <th scope="col">route</th>
+                    <th scope="col">name</th>
+                    <th scope="col">123</th>
+                    <th scope="col">456</th>
+                    <th scope="col">bool</th>
+                </tr>
+            </tbody> -->
+        </table>
+        <h4>No File Selected</h4>
+    </div>
+
+    <br>
+
+    <div class="row justify-content-around">
+        <button type="button" id="Rename" onclick="createRenameButtons()" class="btn btn-primary col-4"
+            data-toggle="modal" data-target="#RenameButton">
+            Rename
+        </button>
+        <button type="button" id="ShowOtherData" class="btn btn-primary button col-4" data-toggle="modal"
+            data-target="#OtherDataButton">
+            Show Other Data
+        </button>
+        <button type="button" id="addRouteButton" onclick="createAddRouteForm()" class="btn btn-primary col-4"
+            data-toggle="modal" data-target="#addRouteModal">
+            Add Route
+        </button>
+    </div>
+
+    <div class="modal fade" id="addRouteModal" tabindex="-1" role="dialog" aria-labelledby="addRouteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRouteModalLabel">Add Route</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="addRouteForm">
+                    <!-- put add route form here -->
+                    <h4>No File Selected</h4>
+                    <!-- <form ref="addRouteForm" id="addRouteForm">
+                        <div class="form-group">
+                            <div id="addRouteFileSelected">
+                                <h5>No File Selected</h5>
+                            </div>
+                            <div id="waypointCountTracker">
+
+                            </div>
+                            
+                            <label for="addRouteInput">
+                                Enter Route Name
+                            </label>
+                            <input type="text" class="form-control" id="addRouteNameInput" placeholder="Route Name">
+                            <p>
+                                <hr>
+                                <label for="addRouteLat">Enter Latitude
+                                </label>
+                                <input type="text" class="form-control" id="addRouteLat" placeholder="Latitude">
+                            <p>
+                                <label for="addRouteLon">Enter Longitude
+                                </label>
+                                <input type="text" class="form-control" id="addRouteLon" placeholder="Longitude">
+                            <p>
+                        </div>
+                        <form>
+                            <div id="addRouteDiv"></div>
+                            <div class="form-group">
+                                <input type='submit' class="btn btn-primary" value="Add Waypoint">
+                            </div> -->
+                            <!--  -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="addRouteFunc()" class="btn btn-primary" data-dismiss="modal">Add Route</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="OtherDataButton" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">GPX Other Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Please choose a component</p>
+                    <div class="col" id="otherDataButtonsDiv">
+                        <h4>No File Selected</h4>
+                        <!-- <button type="button" onclick="dataButton(this)" id="ComponentButton" class="btn btn-primary Button" data-dismiss="modal">
+                            Route 1
+                        </button> -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary Button" data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="RenameButton" tabindex="-1" role="dialog" aria-labelledby="renameModalLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="renameButtonModal">Rename</h5>
+                    <button type="button" onclick="cancelRename()" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div id="renameForm" class="modal-body">
+                    <p>Please choose a component</p>
+                    <div id="renameButtonDiv">
+                        <h4>No File Selected</h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="cancelRename()" class="btn btn-primary Button" data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="modal fade" id="temporaryRoute1Button" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">GPX Other Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="NewName">Enter a new name</label>
+                            <input type="text" class="form-control" id="nameBox" placeholder="New Name">
+                        </div>
+                        <button type="submit" class="btn btn-primary Button" id="RenameSubmitButton">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary Button" data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <hr>
+
+    <p>
+    <div class="row justify-content-around">
+        <button type="button" data-toggle="collapse" id="createGPXButton" class="btn btn-primary col-4"
+            data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Create GPX
+
+        </button>
+    </div>
+    </p>
+
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body" id="createGPXformdiv">
+            <h5>Create GPX</h5>
+
+            <form ref='gpxName' id='gpxName'>
+                <div class="form-group">
+                    <label for="gpxName" id="gpxName">Enter Name of the GPX file</label>
+                    <input type="text" class="form-control" id="gpxNameInput" placeholder="Name">
+
+                </div>
+            </form>
+            <form ref='gpxCreator' id='gpxCreator'>
+                <div class="form-group">
+                    <label for="gpxCreator" id="gpxCreator">Enter Creator of the GPX file</label>
+                    <input type="text" class="form-control" id="gpxCreatorInput" placeholder="Creator">
+
+                </div>
+            </form>
+            <!-- <div class="form-group">
+                <input type="submit" class="btn btn-primary"> 
+            </div> -->
+            *Version is set to 1.1
+            <hr>
+            <button type="submit" id="createGPXButton" onclick="createGPXbutton()" class="btn btn-primary">
+                Submit
+            </button> 
+
+        </div>
+    </div>
+
+
+    <hr>
+
+    <!-- <h3>Find Path Between</h3> -->
+
+    <div class="row">
+        <h3 class="col">Find Paths Between</h3>
+        <div class="col-auto mr-auto" id="pathBetweenID"></div>
+        <div class="dropdown col-auto">
+            <button type="button" id="findpathsID" class="btn btn-primary" data-toggle="modal" data-target="#pathModal">
+                Find Paths
+            </button>
+        </div>
+    </div>
+
+    <!-- onclick="findPathButton(this)" -->
+
+    <div class="modal fade" id="pathModal" tabindex="-1" role="dialog" aria-labelledby="pathModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pathModalLabel">Find Paths Between</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="pathForm">
+                    <!-- put find path form here -->
+                    <form id="sourceLat">
+                        <div class="form-group">
+                          <label for="sourceLat" id="sourceLat">Enter Source Latitude</label>
+                          <input type="text" class="form-control" id="sourceLatitude" placeholder="Latitude">
+                        </div>
+                    </form>
+                    <form id="sourceLon">
+                        <div class="form-group">
+                          <label for="sourceLon" id="sourceLon">Enter Source Longitude</label>
+                          <input type="text" class="form-control" id="sourceLongitude" placeholder="Longitude">
+                        </div>
+                    </form>
+                    <hr>
+                    <form id="destLat">
+                        <div class="form-group">
+                          <label for="destLat" id="destLat">Enter Destination Latitude</label>
+                          <input type="text" class="form-control" id="destLatitude" placeholder="Latitude">
+                        </div>
+                    </form>
+                    <form id="destLon">
+                        <div class="form-group">
+                          <label for="routeLat" id="routeLat">Enter Destination Longitude</label>
+                          <input type="text" class="form-control" id="destLongitude" placeholder="Latitude">
+                        </div>
+                    </form>
+                    <hr>
+                    <form id="deltaForm">
+                        <div class="form-group">
+                          <label for="routeLat" id="routeLat">Enter Delta</label>
+                          <input type="text" class="form-control" id="delta" placeholder="Delta">
+                        </div>
+                    </form>
+                    <!--  -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Find Paths</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="scroll-y scrollbar-y table-responsive" id="pathBetween">
+        <table id="pathTable" class="table table-bordered table-hover table-curved">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Component</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Number of Points</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Loop</th>
+                </tr>
+            </thead>
+
+            <!-- <tbody id="pathData">
+                <tr>
+                    <th scope="col">route</th>
+                    <th scope="col">name</th>
+                    <th scope="col">123</th>
+                    <th scope="col">456</th>
+                    <th scope="col">bool</th>
+                </tr>
+            </tbody> -->
+        </table>
+        <h4>No Paths Found</h4>
+    </div>
+
+    <hr>
+
+    <h3>Display Routes / Tracks</h3>
+
+
+    <hr>
+    <div class="row">
+        <h3 class="col">Database</h3>
+        <div class="dropdown col-auto">
+            <button type="button" id="loginID" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+                Log In
+            </button>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row justify-content-around" id="databaseButtons">
+        <button type="button" id="StoreFiles" onclick="storeFiles()" class="btn btn-primary"
+            data-toggle="modal" data-target="#">
+            Store All Files
+        </button>
+        <button type="button" id="ClearData" class="btn btn-info" onclick="clearDataButton()"
+            data-toggle="modal" data-target="#">
+            Clear All Data
+        </button>
+        <button type="button" id="DisplayStatus" class="btn btn-primary"
+            data-toggle="modal" data-target="#" onclick="storeFiles()">
+            Display DB Status
+        </button>
+    </div>
+
+    <p>
+    <div id="queryDiv" class="row justify-content-around">
+        <button type="button" data-toggle="collapse" id="executeQueryBut" class="btn btn-primary col-4"
+            data-target="#collapseQuery" aria-expanded="false" aria-controls="collapseQuery">
+            Execute Query
+        </button>
+    </div>
+    </p>
+
+    <div class="collapse" id="collapseQuery">
+        <div class="card card-body" id="executeQueryDiv">
+            <h5>Select Option</h5>
+            <hr>
+            <button id = "allRouteSortBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#allRouteSortModal">
+                Sort All Routes
+              </button>
+            <!-- <button type="button" id="nameSortButton" onclick="sortRoutesName()" class="btn btn-primary">
+                Sort Routes by Name
+            </button> 
+            <button type="button" id="nameSortButton" onclick="sortRoutesLength()" class="btn btn-primary">
+                Sort Routes by Length
+            </button> -->
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="allRouteSortModal" tabindex="-1" role="dialog" aria-labelledby="allRouteSortModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="sortAllRoutesLabel">Sort All Routes</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body row justify-content-around">
+                <button type="button" id="nameSortButton" onclick="sortRoutesName()" class="btn btn-primary" data-dismiss="modal">
+                    Sort Routes by Name
+                </button> 
+                <button type="button" id="nameSortButton" onclick="sortRoutesLength()" class="btn btn-primary" data-dismiss="modal">
+                    Sort Routes by Length
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <hr>
+
+    <div class="scroll-y scrollbar-y table-responsive" id="databaseTable">
+        <table id="dbTable" class="table table-bordered table-hover table-curved">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Route ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">GPX ID</th>
+                </tr>
+            </thead>
+
+            <!-- <tbody id="pathData">
+                <tr>
+                    <th scope="col">route</th>
+                    <th scope="col">name</th>
+                    <th scope="col">123</th>
+                    <th scope="col">456</th>
+                </tr>
+            </tbody> -->
+        </table>
+        <h4>No Database Table Selected</h4>
+    </div>
+
+    <hr>
+
+    <h6>Author</h6>
+    <p>Austin Varghese<br>
+        CIS 2750</p>
+    <hr>
+
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+
+</html>

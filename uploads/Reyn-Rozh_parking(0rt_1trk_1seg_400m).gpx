@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="Topo Maps">
+  <rte>
+    <name>new route</name>
+    <rtept lat="12.000000" lon="12.000000"/>
+    <rtept lat="12.000000" lon="12.000000"/>
+    <rtept lat="12.000000" lon="12.000000"/>
+  </rte>
+  <trk>
+    <name>Reynolds To  Rozh. parking lot</name>
+    <trkseg>
+      <trkpt lat="43.530893" lon="-80.228928">
+        <ele>334.0</ele>
+      </trkpt>
+      <trkpt lat="43.531214" lon="-80.229021">
+        <ele>330.2</ele>
+      </trkpt>
+      <trkpt lat="43.532200" lon="-80.228675">
+        <ele>334.2</ele>
+      </trkpt>
+      <trkpt lat="43.532776" lon="-80.227996">
+        <ele>340.0</ele>
+      </trkpt>
+      <trkpt lat="43.532623" lon="-80.226235">
+        <ele>340.0</ele>
+      </trkpt>
+      <trkpt lat="43.532756" lon="-80.226043">
+        <ele>339.8</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
