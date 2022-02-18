@@ -1,4 +1,4 @@
-# CIS*2750 Assignment 4 - Stub
+# GPX Application
 
 ## Installation of Node App
 
